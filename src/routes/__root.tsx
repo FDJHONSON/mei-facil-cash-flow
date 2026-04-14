@@ -34,8 +34,11 @@ export const Route = createRootRoute({
       { title: "MEI Fácil — Gestor Financeiro para MEI" },
       { name: "description", content: "Controle seu faturamento, acompanhe o limite do MEI e nunca perca o prazo do DAS." },
       { property: "og:title", content: "MEI Fácil — Gestor Financeiro para MEI" },
-      { property: "og:description", content: "Seu MEI organizado em minutos. Controle receitas, DAS e limite anual." },
+      { property: "og:description", content: "Controle seu faturamento, acompanhe o limite do MEI e nunca perca o prazo do DAS." },
       { property: "og:type", content: "website" },
+      { name: "twitter:title", content: "MEI Fácil — Gestor Financeiro para MEI" },
+      { name: "twitter:description", content: "Controle seu faturamento, acompanhe o limite do MEI e nunca perca o prazo do DAS." },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
