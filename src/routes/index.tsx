@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { type MeiProfile, saveProfile, getProfile } from "@/lib/mei-store";
+import { isValidCnpj, formatCnpj as formatCnpjValue } from "@/lib/cnpj-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,13 +32,17 @@ function Onboarding() {
   const [tipoAtividade, setTipoAtividade] = useState<MeiProfile['tipoAtividade']>('servico');
   const [dataAbertura, setDataAbertura] = useState('');
 
-  function formatCnpj(value: string) {
-    const digits = value.replace(/\D/g, '').slice(0, 14);
-    return digits
-      .replace(/^(\d{2})(\d)/, '$1.$2')
-      .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-      .replace(/\.(\d{3})(\d)/, '.$1/$2')
-      .replace(/(\d{4})(\d)/, '$1-$2');
+  const [cnpjError, setCnpjError] = useState('');
+
+  function handleCnpjChange(value: string) {
+    const formatted = formatCnpjValue(value);
+    setCnpj(formatted);
+    const digits = formatted.replace(/\D/g, '');
+    if (digits.length === 14 && !isValidCnpj(formatted)) {
+      setCnpjError('CNPJ inválido. Verifique os números digitados.');
+    } else {
+      setCnpjError('');
+    }
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -107,11 +112,14 @@ function Onboarding() {
           <Input
             id="cnpj"
             value={cnpj}
-            onChange={(e) => setCnpj(formatCnpj(e.target.value))}
+            onChange={(e) => handleCnpjChange(e.target.value)}
             placeholder="00.000.000/0001-00"
             required
-            className="h-12 rounded-xl"
+            className={`h-12 rounded-xl ${cnpjError ? 'border-danger' : ''}`}
           />
+          {cnpjError && (
+            <p className="text-xs text-danger">{cnpjError}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -154,7 +162,7 @@ function Onboarding() {
           type="submit"
           size="lg"
           className="w-full rounded-xl h-12 text-base font-semibold"
-          disabled={!nome || !cnpj || !dataAbertura}
+          disabled={!nome || !cnpj || !dataAbertura || !!cnpjError || cnpj.replace(/\D/g, '').length !== 14}
         >
           Começar gratuitamente
         </Button>
