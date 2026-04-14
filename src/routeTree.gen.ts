@@ -9,38 +9,117 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppPerfilRouteImport } from './routes/_app.perfil'
+import { Route as AppNovoLancamentoRouteImport } from './routes/_app.novo-lancamento'
+import { Route as AppHistoricoRouteImport } from './routes/_app.historico'
+import { Route as AppFluxoRouteImport } from './routes/_app.fluxo'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppPerfilRoute = AppPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNovoLancamentoRoute = AppNovoLancamentoRouteImport.update({
+  id: '/novo-lancamento',
+  path: '/novo-lancamento',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHistoricoRoute = AppHistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFluxoRoute = AppFluxoRouteImport.update({
+  id: '/fluxo',
+  path: '/fluxo',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/fluxo': typeof AppFluxoRoute
+  '/historico': typeof AppHistoricoRoute
+  '/novo-lancamento': typeof AppNovoLancamentoRoute
+  '/perfil': typeof AppPerfilRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/fluxo': typeof AppFluxoRoute
+  '/historico': typeof AppHistoricoRoute
+  '/novo-lancamento': typeof AppNovoLancamentoRoute
+  '/perfil': typeof AppPerfilRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/fluxo': typeof AppFluxoRoute
+  '/_app/historico': typeof AppHistoricoRoute
+  '/_app/novo-lancamento': typeof AppNovoLancamentoRoute
+  '/_app/perfil': typeof AppPerfilRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/fluxo'
+    | '/historico'
+    | '/novo-lancamento'
+    | '/perfil'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/fluxo'
+    | '/historico'
+    | '/novo-lancamento'
+    | '/perfil'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_app/dashboard'
+    | '/_app/fluxo'
+    | '/_app/historico'
+    | '/_app/novo-lancamento'
+    | '/_app/perfil'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +127,65 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/perfil': {
+      id: '/_app/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof AppPerfilRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/novo-lancamento': {
+      id: '/_app/novo-lancamento'
+      path: '/novo-lancamento'
+      fullPath: '/novo-lancamento'
+      preLoaderRoute: typeof AppNovoLancamentoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/historico': {
+      id: '/_app/historico'
+      path: '/historico'
+      fullPath: '/historico'
+      preLoaderRoute: typeof AppHistoricoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/fluxo': {
+      id: '/_app/fluxo'
+      path: '/fluxo'
+      fullPath: '/fluxo'
+      preLoaderRoute: typeof AppFluxoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppFluxoRoute: typeof AppFluxoRoute
+  AppHistoricoRoute: typeof AppHistoricoRoute
+  AppNovoLancamentoRoute: typeof AppNovoLancamentoRoute
+  AppPerfilRoute: typeof AppPerfilRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppFluxoRoute: AppFluxoRoute,
+  AppHistoricoRoute: AppHistoricoRoute,
+  AppNovoLancamentoRoute: AppNovoLancamentoRoute,
+  AppPerfilRoute: AppPerfilRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
