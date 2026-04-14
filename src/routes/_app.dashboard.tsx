@@ -66,6 +66,12 @@ function DashboardPage() {
 
   return (
     <div className="px-4 py-6">
+      {/* Welcome Modal */}
+      <WelcomeModal
+        open={showWelcome}
+        onClose={() => setShowWelcome(false)}
+        nome={profile.nome.split(' ')[0]}
+      />
       {/* Header */}
       <div className="mb-6">
         <p className="text-sm text-muted-foreground">Bem-vindo de volta</p>
